@@ -20,16 +20,16 @@ body {
 }
 
 .banner {
-  width: 45%;
+  width: 20%;
   background-color: #f2f2f2;
-  padding: 20px;
-  margin-bottom: 20px;
+  padding: 5px;
+  margin-bottom: 5px;
   border-radius: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .banner-right {
-  width: 45%;
+  width: 20%;
   background-color: #f2f2f2;
   padding: 20px;
   margin-bottom: 20px;
