@@ -1,206 +1,117 @@
-<!DOCTYPE html><html lang="en">
-<!--
-This file is auto-generated from "sanity dev".
-Modifications to this file is automatically discarded.
-
-To customize the rendering of this file, see
-https://docs.sanity.io/help/custom-document-component
--->
-<head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/><meta name="robots" content="noindex"/><meta name="referrer" content="same-origin"/><link rel="icon" href="/static/favicon.ico" sizes="any"/><link rel="icon" href="/static/favicon.svg" type="image/svg+xml"/><link rel="apple-touch-icon" href="/static/apple-touch-icon.png"/><link rel="manifest" href="/static/manifest.webmanifest"/><title>Sanity Studio</title><script>
-  ;(function () {
-    var _caughtErrors = []
-
-    var errorChannel = (function () {
-      var subscribers = []
-
-      function publish(msg) {
-        for (var i = 0; i < subscribers.length; i += 1) {
-          subscribers[i](msg)
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Paradise</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
-      }
-
-      function subscribe(subscriber) {
-        subscribers.push(subscriber)
-
-        return function () {
-          var idx = subscribers.indexOf(subscriber)
-
-          if (idx > -1) {
-            subscribers.splice(idx, 1)
-          }
+        .header {
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
         }
-      }
-
-      return {publish, subscribe, subscribers}
-    })()
-
-    // NOTE: Store the error channel instance in the global scope so that the Studio application can
-    // access it and subscribe to errors.
-    window.__sanityErrorChannel = {
-      subscribe: errorChannel.subscribe,
-    }
-
-    function _nextTick(callback) {
-      setTimeout(callback, 0)
-    }
-
-    function _handleError(error, params) {
-      _nextTick(function () {
-        // - If there are error channel subscribers, then we notify them (no console error).
-        // - If there are no subscribers, then we log the error to the console and render the error overlay.
-        if (errorChannel.subscribers.length) {
-          errorChannel.publish({error, params})
-        } else {
-          console.error(error)
-
-          _renderErrorOverlay(error, params)
+        .logo {
+            font-size: 2rem;
         }
-      })
-    }
-
-    var ERROR_BOX_STYLE = [
-      'background: #fff',
-      'border-radius: 6px',
-      'box-sizing: border-box',
-      'color: #121923',
-      'flex: 1',
-      "font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue','Liberation Sans',Helvetica,Arial,system-ui,sans-serif",
-      'font-size: 16px',
-      'line-height: 21px',
-      'margin: 0 auto',
-      'max-width: 960px',
-      'overflow: auto',
-      'padding: 20px',
-      'width: 100%',
-    ].join(';')
-
-    var ERROR_CODE_STYLE = [
-      'color: #972E2A',
-      "font-family: -apple-system-ui-monospace, 'SF Mono', Menlo, Monaco, Consolas, monospace",
-      'font-size: 13px',
-      'line-height: 17px',
-      'margin: 0',
-    ].join(';')
-
-    function _renderErrorOverlay(error, params) {
-      var errorElement = document.querySelector('#__sanityError') || document.createElement('div')
-      var colno = params.event.colno
-      var lineno = params.event.lineno
-      var filename = params.event.filename
-
-      errorElement.id = '__sanityError'
-      errorElement.innerHTML = [
-        '<div style="' + ERROR_BOX_STYLE + '">',
-        '<div style="font-weight: 700;">Uncaught error: ' + error.message + '</div>',
-        '<div style="color: #515E72; font-size: 13px; line-height: 17px; margin: 10px 0;">' +
-        filename +
-        ':' +
-        lineno +
-        ':' +
-        colno +
-        '</div>',
-        '<pre style="' + ERROR_CODE_STYLE + '">' + error.stack + '</pre>',
-        '</div>',
-      ].join('')
-
-      errorElement.style.position = 'fixed'
-      errorElement.style.zIndex = 1000000
-      errorElement.style.top = 0
-      errorElement.style.left = 0
-      errorElement.style.right = 0
-      errorElement.style.bottom = 0
-      errorElement.style.padding = '20px'
-      errorElement.style.background = 'rgba(16,17,18,0.66)'
-      errorElement.style.display = 'flex'
-      errorElement.style.alignItems = 'center'
-      errorElement.style.justifyContent = 'center'
-
-      document.body.appendChild(errorElement)
-    }
-
-    // NOTE:
-    // Yes – we're attaching 2 error listeners below 👀
-    // This is because React makes the same error throw twice (in development mode).
-    // See: https://github.com/facebook/react/issues/10384
-
-    // Error listener #1
-    window.onerror = function (event, source, lineno, colno, error) {
-      _nextTick(function () {
-        if (_caughtErrors.indexOf(error) !== -1) return
-
-        _caughtErrors.push(error)
-
-        _handleError(error, {
-          event,
-          lineno,
-          colno,
-          source,
-        })
-
-        _nextTick(function () {
-          var idx = _caughtErrors.indexOf(error)
-
-          if (idx > -1) _caughtErrors.splice(idx, 1)
-        })
-      })
-
-      // IMPORTANT: this callback must return `true` to prevent the error from being rendered in
-      // the browser’s console.
-      return true
-    }
-
-    // Error listener #2
-    window.addEventListener('error', function (event) {
-      if (_caughtErrors.indexOf(event.error) !== -1) return true
-
-      _caughtErrors.push(event.error)
-
-      _handleError(event.error, {
-        event,
-        lineno: event.lineno,
-        colno: event.colno,
-      })
-
-      _nextTick(function () {
-        _nextTick(function () {
-          var idx = _caughtErrors.indexOf(event.error)
-
-          if (idx > -1) _caughtErrors.splice(idx, 1)
-        })
-      })
-
-      return true
-    })
-  })()
-</script><style>
-  html {
-    background-color: #f1f3f6;
-  }
-  html,
-  body,
-  #sanity {
-    height: 100%;
-  }
-  body {
-    margin: 0;
-    -webkit-font-smoothing: antialiased;
-  }
-</style></head><body><div id="sanity"></div><script type="module" src="/.sanity/runtime/app.js"></script><noscript><div class="sanity-app-no-js__root"><div class="sanity-app-no-js__content"><style type="text/css">
-  .sanity-app-no-js__root {
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    background: #fff;
-  }
-
-  .sanity-app-no-js__content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    font-family: helvetica, arial, sans-serif;
-  }
-</style><h1>JavaScript disabled</h1><p>Please <a href="https://www.enable-javascript.com/">enable JavaScript</a> in your browser and reload the page to proceed.</p></div></div></noscript></body></html>
+        .nav-links {
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            width: 20%;
+        }
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+        }
+        .nav-links a:hover {
+            background-color: #555;
+        }
+        .banner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50vh;
+            background-image: url("https://longdan.co.uk/cdn/shop/articles/vegan-vegetarian-paradise_600x600_crop_center.jpg?v=1700554704");
+            background-size: cover;
+            background-position: center;
+        }
+        .banner h1 {
+            color: #fff;
+            font-size: 4rem;
+        }
+        .menu {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 2rem;
+        }
+        .menu-item {
+            width: 30%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        .menu-item:hover {
+            transform: translateY(-5px);
+        }
+        .menu-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .menu-item h2 {
+            margin: 1rem 0;
+            font-size: 2rem;
+        }
+        .menu-item p {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="logo">Paradise</div>
+    <nav class="nav-links">
+        <a href="#">Home</a>
+        <a href="#">Menu</a>
+        <a href="#">Contact</a>
+    </nav>
+</header>
+<section class="banner">
+    <h1></h1>
+</section>
+<section class="menu">
+    <div class="menu-item">
+        <img src="https://www.veganricha.com/wp-content/uploads/2016/08/Vegan-veggie-vegan-pizza-veganricha-5769.jpg" alt="Pizza" />
+        <h2>Pizza</h2>
+        <p>Delicious pizza with your favorite toppings</p>
+    </div>
+    <div class="menu-item">
+        <img src="https://www.wellplated.com/wp-content/uploads/2016/03/Black-Bean-Vegan-Burger-Recipe.jpg" alt="Burger" />
+        <h2>Burger</h2>
+        <p>Juicy burger with melted cheese</p>
+    </div>
+    <div class="menu-item">
+        <img src="https://img.taste.com.au/3jsqNNOr/taste/2018/09/vegan-pasta-salad-with-green-goddess-dressing-140917-2.jpg" alt="Salad" />
+        <h2>Salad</h2>
+        <p>Fresh and healthy salad options</p>
+    </div>
+    <div class="menu-item">
+        <img src="tacos.jpg" alt="Tacos" />
+        <h2>Tacos</h2>
+        <p>Crunchy and flavorful tacos</p>
+    </div>
+</section>
+</body>
